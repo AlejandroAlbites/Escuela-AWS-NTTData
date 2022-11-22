@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Resources:
+  PostProductFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: post-item.handler
+      Runtime: nodejs16.x
+      CodeUri: ./product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Environment:
+        Variables:
+          PRODUCTS_TABLE: !Ref ProductsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /product
+            Method: POST
+
+  GetAllProductFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: get-all-item.handler
+      Runtime: nodejs16.x
+      CodeUri: ./product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Environment:
+        Variables:
+          PRODUCTS_TABLE: !Ref ProductsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /product
+            Method: GET
+  
+  GetByIdProductFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: get-by-id.handler
+      Runtime: nodejs16.x
+      CodeUri: ./product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Environment:
+        Variables:
+          PRODUCTS_TABLE: !Ref ProductsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /product/{id}
+            Method: GET
+  
+  PutProductFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: update-item.handler
+      Runtime: nodejs16.x
+      CodeUri: ./product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Environment:
+        Variables:
+          PRODUCTS_TABLE: !Ref ProductsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /product/{id}
+            Method: PUT
+  
+  DeleteProductFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: delete-item.handler
+      Runtime: nodejs16.x
+      CodeUri: ./product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Environment:
+        Variables:
+          PRODUCTS_TABLE: !Ref ProductsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /product/{id}
+            Method: DELETE
+
+  ProductsTable:
+    Type: AWS::Serverless::SimpleTable
